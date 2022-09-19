@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 namespace Bitmotion\MarketingAutomation\Persona;
 
 /***
@@ -16,6 +17,8 @@ namespace Bitmotion\MarketingAutomation\Persona;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawFooterHookInterface;
+use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
@@ -108,21 +111,12 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         return $this->persona !== null && TYPO3_MODE === 'FE';
     }
 
-    /**
-     * Add persona fields to tables that provide persona restriction
-     *
-     * @param array $sqlString Current SQL statements to be executed
-     *
-     * @return array Modified arguments of SqlReader::emitTablesDefinitionIsBeingBuiltSignal signal
-     */
-    public function getPersonaFieldsRequiredDatabaseSchema(array $sqlString): array
+    public function getPersonaFieldsRequiredDatabaseSchema(AlterTableDefinitionStatementsEvent $event): void
     {
         $additionalSqlString = $this->buildPersonaFieldsRequiredDatabaseSchema();
-        if (!empty($additionalSqlString)) {
-            $sqlString = array_merge($sqlString, $additionalSqlString);
+        foreach ($additionalSqlString as $sql) {
+            $event->addSqlData($sql);
         }
-
-        return ['sqlString' => $sqlString];
     }
 
     private function buildPersonaFieldsRequiredDatabaseSchema(): array
@@ -139,8 +133,9 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         return $sql;
     }
 
-    public function addPersonaRestrictionFieldToTca(array $tca): array
+    public function addPersonaRestrictionFieldToTca(AfterTcaCompilationEvent $event): void
     {
+        $tca = $event->getTca();
         foreach ($tca as $table => &$config) {
             $personaFieldName = $config['ctrl']['enablecolumns'][self::PERSONA_ENABLE_FIELDS_KEY] ?? '';
             if ($personaFieldName) {
@@ -160,8 +155,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
                 unset($GLOBALS['TCA'][$table]);
             }
         }
-
-        return [$tca];
+        $event->setTca($tca);
     }
 
     /**
