@@ -1,18 +1,17 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Bitmotion\MarketingAutomation\Persona;
 
-/***
- *
+/*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  *
- *  (c) 2018 Florian Wessels <f.wessels@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
- *
- ***/
+ * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
+ */
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageLayoutView;
@@ -23,7 +22,9 @@ use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * Fulfills TYPO3 API to add restriction fields for editors
@@ -108,7 +109,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
 
     private function isEnabled(): bool
     {
-        return $this->persona !== null && TYPO3_MODE === 'FE';
+        return $this->persona !== null && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
     }
 
     public function getPersonaFieldsRequiredDatabaseSchema(AlterTableDefinitionStatementsEvent $event): void
@@ -145,7 +146,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
                 );
                 // Expose current config to globals TCA, make the below TYPO3 API work, which works on globals
                 $GLOBALS['TCA'][$table] = &$config;
-                \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+                ExtensionManagementUtility::addToAllTCAtypes(
                     $table,
                     $personaFieldName,
                     '',
