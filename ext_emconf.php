@@ -14,7 +14,7 @@ $EM_CONF['marketing_automation'] = [
     'author_email' => 'dev@Leuchtfeuer.com',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.0-11.5.99',
+            'typo3' => '10.4.2-11.5.99',
         ],
         'conflicts' => [],
         'suggests' => [],
