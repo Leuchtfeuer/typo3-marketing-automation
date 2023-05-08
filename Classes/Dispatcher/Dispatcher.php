@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Bitmotion\MarketingAutomation\Dispatcher;
+
 /*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
  *
@@ -10,8 +12,6 @@ declare(strict_types=1);
  *
  * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
  */
-
-namespace Bitmotion\MarketingAutomation\Dispatcher;
 
 use Bitmotion\MarketingAutomation\Persona\Persona;
 use Bitmotion\MarketingAutomation\Storage\Cookie;
