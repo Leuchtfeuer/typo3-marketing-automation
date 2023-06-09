@@ -18,7 +18,6 @@ return [
         'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'delete' => 'deleted',
         'sortby' => 'sorting',
         'searchFields' => 'title,description',
@@ -90,7 +89,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'width' => 200,
-                'eval' => 'trim,required',
+                'eval' => 'trim',
+                'required' => true,
             ],
         ],
         'description' => [

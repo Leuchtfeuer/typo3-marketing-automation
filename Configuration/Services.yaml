@@ -7,13 +7,13 @@ services:
   Bitmotion\MarketingAutomation\:
       resource: '../Classes/*'
 
-  Bitmotion\MarketingAutomation\Persona\PersonaRestriction:
-    tags:
-      - name: event.listener
-        event: TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent
-        identifier: 'marketingAutomationPersonaPersonaRestrictionDatabaseSchema'
-        method: 'getPersonaFieldsRequiredDatabaseSchema'
-      - name: event.listener
-        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
-        identifier: 'marketingAutomationPersonaPersonaRestrictionTca'
-        method: 'addPersonaRestrictionFieldToTca'
+#  Bitmotion\MarketingAutomation\Persona\PersonaRestriction:
+#    tags:
+#      - name: event.listener
+#        event: TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent
+#        identifier: 'marketingAutomationPersonaPersonaRestrictionDatabaseSchema'
+#        method: 'getPersonaFieldsRequiredDatabaseSchema'
+#      - name: event.listener
+#        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
+#        identifier: 'marketingAutomationPersonaPersonaRestrictionTca'
+#        method: 'addPersonaRestrictionFieldToTca'

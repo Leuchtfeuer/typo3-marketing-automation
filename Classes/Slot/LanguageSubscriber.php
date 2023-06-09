@@ -57,9 +57,7 @@ class LanguageSubscriber implements SubscriberInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_language');
 
         $count = (int)$queryBuilder->count('uid')
-                ->from('sys_language')
-                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, \PDO::PARAM_INT)))
-                ->execute()
+                ->from('sys_language')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, \PDO::PARAM_INT)))->executeQuery()
                 ->fetchColumn();
 
         return $count === 1;

@@ -14,6 +14,7 @@ namespace Bitmotion\MarketingAutomation\Persona;
  */
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+// @todo v12: see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/10.3/Deprecation-90348-PageLayoutViewClass.html
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawFooterHookInterface;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
@@ -81,7 +82,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         $constraints = [];
 
         if (!$this->isEnabled()) {
-            return $expressionBuilder->orX(...$constraints);
+            return $expressionBuilder->or(...$constraints);
         }
 
         foreach ($queriedTables as $tableAlias => $tableName) {
@@ -104,7 +105,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
             }
         }
 
-        return $expressionBuilder->orX(...$constraints);
+        return $expressionBuilder->or(...$constraints);
     }
 
     private function isEnabled(): bool
