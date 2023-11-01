@@ -8,13 +8,13 @@ $EM_CONF['marketing_automation'] = [
     'uploadfolder' => false,
     'createDirs' => '',
     'clearCacheOnLoad' => false,
-    'version' => '1.2.3',
-    'author' => 'Florian Wessels, Helmut Hummel',
+    'version' => '2.0.0',
+    'author' => 'Team Yoda',
     'author_company' => 'Leuchtfeuer Digital Marketing',
     'author_email' => 'dev@Leuchtfeuer.com',
     'constraints' => [
         'depends' => [
-            'typo3' => '9.5.0-10.4.99',
+            'typo3' => '10.4.2-11.5.99',
         ],
         'conflicts' => [],
         'suggests' => [],

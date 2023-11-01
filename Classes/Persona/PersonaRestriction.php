@@ -1,26 +1,31 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Bitmotion\MarketingAutomation\Persona;
 
-/***
- *
+/*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  *
- *  (c) 2018 Florian Wessels <f.wessels@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
- *
- ***/
+ * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
+ */
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawFooterHookInterface;
+use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * Fulfills TYPO3 API to add restriction fields for editors
@@ -105,24 +110,16 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
 
     private function isEnabled(): bool
     {
-        return $this->persona !== null && TYPO3_MODE === 'FE';
+        return $this->persona !== null && ($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface
+            && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
     }
 
-    /**
-     * Add persona fields to tables that provide persona restriction
-     *
-     * @param array $sqlString Current SQL statements to be executed
-     *
-     * @return array Modified arguments of SqlReader::emitTablesDefinitionIsBeingBuiltSignal signal
-     */
-    public function getPersonaFieldsRequiredDatabaseSchema(array $sqlString): array
+    public function getPersonaFieldsRequiredDatabaseSchema(AlterTableDefinitionStatementsEvent $event): void
     {
         $additionalSqlString = $this->buildPersonaFieldsRequiredDatabaseSchema();
-        if (!empty($additionalSqlString)) {
-            $sqlString = array_merge($sqlString, $additionalSqlString);
+        foreach ($additionalSqlString as $sql) {
+            $event->addSqlData($sql);
         }
-
-        return ['sqlString' => $sqlString];
     }
 
     private function buildPersonaFieldsRequiredDatabaseSchema(): array
@@ -139,8 +136,9 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         return $sql;
     }
 
-    public function addPersonaRestrictionFieldToTca(array $tca): array
+    public function addPersonaRestrictionFieldToTca(AfterTcaCompilationEvent $event): void
     {
+        $tca = $event->getTca();
         foreach ($tca as $table => &$config) {
             $personaFieldName = $config['ctrl']['enablecolumns'][self::PERSONA_ENABLE_FIELDS_KEY] ?? '';
             if ($personaFieldName) {
@@ -150,7 +148,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
                 );
                 // Expose current config to globals TCA, make the below TYPO3 API work, which works on globals
                 $GLOBALS['TCA'][$table] = &$config;
-                \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+                ExtensionManagementUtility::addToAllTCAtypes(
                     $table,
                     $personaFieldName,
                     '',
@@ -160,8 +158,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
                 unset($GLOBALS['TCA'][$table]);
             }
         }
-
-        return [$tca];
+        $event->setTca($tca);
     }
 
     /**

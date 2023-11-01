@@ -1,8 +1,8 @@
 {
   "name": "leuchtfeuer/marketing-automation",
-  "description": "Base TYPO3 extension that allows targeting and personalization of TYPO3 content: Limit pages, content elements etc. to certain \"Personas\". Determination of Personas can come from various sources (requires add-on extensions).",
+  "description": "Base TYPO3 extension that allows targeting and personalization of TYPO3 content: Limit pages, content-elements etc. to certain \"Marketing Personas\". Determination of Personas can come from various sources (requires add-on extensions).",
   "type": "typo3-cms-extension",
-  "homepage": "https://www.Leuchtfeuer.com",
+  "homepage": "https://www.leuchtfeuer.com",
   "license": "GPL-2.0-or-later",
   "keywords": [
     "TYPO3 CMS",
@@ -15,9 +15,9 @@
     "email": "dev@Leuchtfeuer.com"
   },
   "require": {
-    "typo3/cms-backend": "^9.5.17 || ^10.4.2",
-    "typo3/cms-core": "^9.5.17 || ^10.4.2",
-    "typo3/cms-extbase": "^9.5.17 || ^10.4.2"
+    "typo3/cms-backend": "^10.4.2 || ^11.5",
+    "typo3/cms-core": "^10.4.2 || ^11.5",
+    "typo3/cms-extbase": "^10.4.2 || ^11.5"
   },
   "autoload": {
     "psr-4": {
