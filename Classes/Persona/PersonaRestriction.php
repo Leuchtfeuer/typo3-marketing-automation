@@ -72,11 +72,13 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         $this->persona = $persona;
     }
 
+    #[\Override]
     public function isEnforced(): bool
     {
         return $this->isEnabled();
     }
 
+    #[\Override]
     public function buildExpression(array $queriedTables, ExpressionBuilder $expressionBuilder): CompositeExpression
     {
         $constraints = [];
@@ -183,22 +185,18 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         $staticItems = implode(
             ',',
             array_filter(
-                explode(',', $row[$personaFieldName]),
-                function ($item) {
-                    return $item < 0;
-                }
+                explode(',', (string) $row[$personaFieldName]),
+                fn($item): bool => $item < 0
             )
         );
         $relationItems = implode(
             ',',
             array_filter(
-                explode(',', $row[$personaFieldName]),
-                function ($item) {
-                    return $item > 0;
-                }
+                explode(',', (string) $row[$personaFieldName]),
+                fn($item): bool => $item > 0
             )
         );
-        if ($relationItems) {
+        if ($relationItems !== '' && $relationItems !== '0') {
             $rowWithRelationItems = $row;
             $rowWithRelationItems[$personaFieldName] = $relationItems;
             $parentObject->getProcessedValue('tt_content', $personaFieldName, $rowWithRelationItems, $info);

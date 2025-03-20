@@ -20,20 +20,10 @@ use TYPO3\CMS\Extbase\Security\Exception\InvalidHashException;
 
 class Cookie
 {
-    protected $cookieName = '';
+    protected HashService $hashService;
 
-    protected $cookieLifetime = 0;
-
-    /**
-     * @var HashService
-     */
-    protected $hashService;
-
-    public function __construct(string $cookieName, int $cookieLifetime, HashService $hashService = null)
+    public function __construct(protected string $cookieName, protected int $cookieLifetime, HashService $hashService = null)
     {
-        $this->cookieName = $cookieName;
-        $this->cookieLifetime = $cookieLifetime;
-
         $this->hashService = $hashService ?: GeneralUtility::makeInstance(HashService::class);
     }
 
@@ -41,9 +31,7 @@ class Cookie
     {
         try {
             $data = $this->hashService->validateAndStripHmac($_COOKIE[$this->cookieName] ?? '');
-        } catch (InvalidArgumentForHashGenerationException $exception) {
-            $data = '';
-        } catch (InvalidHashException $exception) {
+        } catch (InvalidArgumentForHashGenerationException|InvalidHashException) {
             $data = '';
         }
 
@@ -55,11 +43,7 @@ class Cookie
         setcookie(
             $this->cookieName,
             $this->hashService->appendHmac(implode('.', $data) . '.'),
-            time() + $this->cookieLifetime,
-            '/',
-            '',
-            false,
-            true
+            ['expires' => time() + $this->cookieLifetime, 'path' => '/', 'domain' => '', 'secure' => false, 'httponly' => true]
         );
     }
 }

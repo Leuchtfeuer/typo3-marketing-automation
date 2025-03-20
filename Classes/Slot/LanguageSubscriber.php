@@ -29,11 +29,12 @@ class LanguageSubscriber implements SubscriberInterface
         try {
             $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
             $this->languageId = (int)$languageAspect->getId();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->languageId = 0;
         }
     }
 
+    #[\Override]
     public function needsUpdate(Persona $currentPersona, Persona $newPersona): bool
     {
         if (!$this->isValidLanguageId()) {
@@ -43,6 +44,7 @@ class LanguageSubscriber implements SubscriberInterface
         return $this->languageId !== $newPersona->getLanguage();
     }
 
+    #[\Override]
     public function update(Persona $persona): Persona
     {
         return $persona->withLanguage($this->languageId);
@@ -57,8 +59,7 @@ class LanguageSubscriber implements SubscriberInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_language');
 
         $count = (int)$queryBuilder->count('uid')
-                ->from('sys_language')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, \PDO::PARAM_INT)))->executeQuery()
-                ->fetchColumn();
+                ->from('sys_language')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, \TYPO3\CMS\Core\Database\Connection::PARAM_INT)))->executeQuery()->fetchOne();
 
         return $count === 1;
     }

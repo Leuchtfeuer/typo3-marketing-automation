@@ -15,14 +15,8 @@ namespace Bitmotion\MarketingAutomation\Persona;
 
 class Persona
 {
-    protected $id = 0;
-
-    protected $language = 0;
-
-    public function __construct(int $id, int $language)
+    public function __construct(protected int $id, protected int $language)
     {
-        $this->id = $id;
-        $this->language = $language;
     }
 
     public function isValid(): bool

@@ -77,7 +77,7 @@ class Dispatcher implements SingletonInterface
     {
         try {
             return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('marketing_automation');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return [];
         }
     }
