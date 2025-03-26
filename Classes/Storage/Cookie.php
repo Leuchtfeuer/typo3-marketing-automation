@@ -43,7 +43,6 @@ class Cookie
 
     /**
      * @param string[] $data
-     * @return void
      */
     public function save(array $data): void
     {

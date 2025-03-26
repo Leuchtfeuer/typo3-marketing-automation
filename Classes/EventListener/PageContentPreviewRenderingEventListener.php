@@ -82,7 +82,7 @@ class PageContentPreviewRenderingEventListener
 
             // Get the values for static items
             $staticContent = '';
-            if ($staticItems) {
+            if ($staticItems !== '' && $staticItems !== '0') {
                 $staticContent = BackendUtility::getLabelsFromItemsList('tt_content', $personaFieldName, $staticItems);
                 if ($staticContent && $relationContent) {
                     $relationContent .= ', ' . $staticContent;
@@ -92,7 +92,7 @@ class PageContentPreviewRenderingEventListener
             }
 
             if ($relationContent) {
-                $content = '<strong>' . htmlspecialchars($fieldLabel) . '</strong> ' . htmlspecialchars($relationContent);
+                $content = '<strong>' . htmlspecialchars((string) $fieldLabel) . '</strong> ' . htmlspecialchars($relationContent);
             }
         } else {
             // For static-only items
@@ -103,11 +103,11 @@ class PageContentPreviewRenderingEventListener
 
             $staticContent = BackendUtility::getLabelsFromItemsList('tt_content', $personaFieldName, $row[$personaFieldName]);
             if ($staticContent) {
-                $content = '<strong>' . htmlspecialchars($fieldLabel) . '</strong> ' . htmlspecialchars($staticContent);
+                $content = '<strong>' . htmlspecialchars((string) $fieldLabel) . '</strong> ' . htmlspecialchars($staticContent);
             }
         }
 
-        if ($content) {
+        if ($content !== '' && $content !== '0') {
             $previewContent = $event->getPreviewContent();
             $event->setPreviewContent($previewContent . $content);
         }
