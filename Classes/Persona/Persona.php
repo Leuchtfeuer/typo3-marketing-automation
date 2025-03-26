@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Bitmotion\MarketingAutomation\Persona;
-
 /*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
  *
@@ -13,11 +11,11 @@ namespace Bitmotion\MarketingAutomation\Persona;
  * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
  */
 
+namespace Bitmotion\MarketingAutomation\Persona;
+
 class Persona
 {
-    public function __construct(protected int $id, protected int $language)
-    {
-    }
+    public function __construct(protected int $id, protected int $language) {}
 
     public function isValid(): bool
     {

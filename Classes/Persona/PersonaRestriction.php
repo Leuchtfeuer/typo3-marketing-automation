@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Bitmotion\MarketingAutomation\Persona;
-
 /*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
  *
@@ -13,10 +11,8 @@ namespace Bitmotion\MarketingAutomation\Persona;
  * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
  */
 
-use TYPO3\CMS\Backend\Utility\BackendUtility;
-// @todo v12: see https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/10.3/Deprecation-90348-PageLayoutViewClass.html
-use TYPO3\CMS\Backend\View\PageLayoutView;
-use TYPO3\CMS\Backend\View\PageLayoutViewDrawFooterHookInterface;
+namespace Bitmotion\MarketingAutomation\Persona;
+
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
@@ -31,7 +27,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  * Fulfills TYPO3 API to add restriction fields for editors
  * and restricts rendering according to what has been selected
  */
-class PersonaRestriction implements SingletonInterface, QueryRestrictionInterface, EnforceableQueryRestrictionInterface, PageLayoutViewDrawFooterHookInterface
+class PersonaRestriction implements SingletonInterface, QueryRestrictionInterface, EnforceableQueryRestrictionInterface
 {
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';
 
@@ -171,43 +167,6 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
     {
         if ($this->persona->isValid()) {
             $params['hashParameters'][self::PERSONA_ENABLE_FIELDS_KEY] = (string)$this->persona->getId();
-        }
-    }
-
-    public function preProcess(PageLayoutView &$parentObject, &$info, array &$row): void
-    {
-        $personaFieldName = $GLOBALS['TCA']['tt_content']['ctrl']['enablecolumns'][self::PERSONA_ENABLE_FIELDS_KEY] ?? '';
-        if ($personaFieldName === '' || ($row[$personaFieldName] ?? '') === '') {
-            return;
-        }
-
-        // Unfortunately TYPO3 does not cope with mixed static and relational items, thus we must process them separately
-        $staticItems = implode(
-            ',',
-            array_filter(
-                explode(',', (string) $row[$personaFieldName]),
-                fn($item): bool => $item < 0
-            )
-        );
-        $relationItems = implode(
-            ',',
-            array_filter(
-                explode(',', (string) $row[$personaFieldName]),
-                fn($item): bool => $item > 0
-            )
-        );
-        if ($relationItems !== '' && $relationItems !== '0') {
-            $rowWithRelationItems = $row;
-            $rowWithRelationItems[$personaFieldName] = $relationItems;
-            $parentObject->getProcessedValue('tt_content', $personaFieldName, $rowWithRelationItems, $info);
-            $infoWithRelationItems = array_pop($info);
-            $infoWithStaticItems = BackendUtility::getLabelsFromItemsList('tt_content', $personaFieldName, $staticItems);
-            if ($infoWithStaticItems) {
-                $infoWithRelationItems .= ', ' . $infoWithStaticItems;
-            }
-            $info[] = $infoWithRelationItems;
-        } else {
-            $parentObject->getProcessedValue('tt_content', $personaFieldName, $row, $info);
         }
     }
 }

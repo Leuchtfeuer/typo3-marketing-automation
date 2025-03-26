@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Bitmotion\MarketingAutomation\Slot;
-
 /*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
  *
@@ -12,6 +10,8 @@ namespace Bitmotion\MarketingAutomation\Slot;
  *
  * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
  */
+
+namespace Bitmotion\MarketingAutomation\Slot;
 
 use Bitmotion\MarketingAutomation\Dispatcher\SubscriberInterface;
 
