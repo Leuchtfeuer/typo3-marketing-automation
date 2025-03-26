@@ -13,50 +13,16 @@ declare(strict_types=1);
 
 namespace Bitmotion\MarketingAutomation\Persona;
 
-use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
-use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-/**
- * Fulfills TYPO3 API to add restriction fields for editors
- * and restricts rendering according to what has been selected
- */
 class PersonaRestriction implements SingletonInterface, QueryRestrictionInterface, EnforceableQueryRestrictionInterface
 {
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';
-
-    private static $sqlFieldTemplate = 'CREATE TABLE %s ( `%s` varchar(100) DEFAULT \'\' NOT NULL);';
-
-    private static $tcaFieldTemplate = [
-        'label' => 'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.label',
-        'config' => [
-            'type' => 'select',
-            'renderType' => 'selectMultipleSideBySide',
-            'exclusiveKeys' => '-1',
-            'foreign_table' => 'tx_marketingautomation_persona',
-            'foreign_table_where' => 'ORDER BY tx_marketingautomation_persona.title',
-            'items' => [
-                [
-                    'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.hideWhenNoMatch',
-                    -1,
-                ],
-                [
-                    'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.showWhenNoMatch',
-                    -2,
-                ],
-                [
-                    'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.personaItemSeparator',
-                    '--div--',
-                ],
-            ],
-        ],
-    ];
 
     /**
      * @var Persona
@@ -109,53 +75,6 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
     private function isEnabled(): bool
     {
         return $this->persona !== null && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
-    }
-
-    public function getPersonaFieldsRequiredDatabaseSchema(AlterTableDefinitionStatementsEvent $event): void
-    {
-        $additionalSqlString = $this->buildPersonaFieldsRequiredDatabaseSchema();
-        foreach ($additionalSqlString as $sql) {
-            $event->addSqlData($sql);
-        }
-    }
-
-    private function buildPersonaFieldsRequiredDatabaseSchema(): array
-    {
-        $sql = [];
-
-        foreach ($GLOBALS['TCA'] as $table => $config) {
-            $personaFieldName = $config['ctrl']['enablecolumns'][self::PERSONA_ENABLE_FIELDS_KEY] ?? '';
-            if ($personaFieldName) {
-                $sql[] = sprintf(self::$sqlFieldTemplate, $table, $personaFieldName);
-            }
-        }
-
-        return $sql;
-    }
-
-    public function addPersonaRestrictionFieldToTca(AfterTcaCompilationEvent $event): void
-    {
-        $tca = $event->getTca();
-        foreach ($tca as $table => &$config) {
-            $personaFieldName = $config['ctrl']['enablecolumns'][self::PERSONA_ENABLE_FIELDS_KEY] ?? '';
-            if ($personaFieldName) {
-                $config['columns'][$personaFieldName] = array_replace_recursive(
-                    self::$tcaFieldTemplate,
-                    $config['columns'][$personaFieldName] ?? []
-                );
-                // Expose current config to globals TCA, make the below TYPO3 API work, which works on globals
-                $GLOBALS['TCA'][$table] = &$config;
-                ExtensionManagementUtility::addToAllTCAtypes(
-                    $table,
-                    $personaFieldName,
-                    '',
-                    'after:fe_group'
-                );
-                // Remove the global exposure we created above
-                unset($GLOBALS['TCA'][$table]);
-            }
-        }
-        $event->setTca($tca);
     }
 
     /**
