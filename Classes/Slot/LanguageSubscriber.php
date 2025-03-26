@@ -22,7 +22,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LanguageSubscriber implements SubscriberInterface
 {
-    protected $languageId = 0;
+    protected int $languageId = 0;
 
     public function __construct()
     {

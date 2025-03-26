@@ -30,9 +30,15 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Dispatcher implements SingletonInterface
 {
-    protected $subscribers = [];
+    /**
+     * @var string[]
+     */
+    protected array $subscribers = [];
 
-    protected $listeners = [];
+    /**
+     * @var string[]
+     */
+    protected array $listeners = [];
 
     public function addSubscriber(string $className): void
     {
@@ -71,8 +77,8 @@ class Dispatcher implements SingletonInterface
 
         if ($currentPersona !== $newPersona) {
             $storage->save([
-                $newPersona->getId(),
-                $newPersona->getLanguage(),
+                (string)$newPersona->getId(),
+                (string)$newPersona->getLanguage(),
             ]);
         }
 
@@ -82,6 +88,9 @@ class Dispatcher implements SingletonInterface
         }
     }
 
+    /**
+     * @return array<mixed>
+     */
     protected function getExtensionConfiguration(): array
     {
         try {

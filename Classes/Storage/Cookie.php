@@ -27,6 +27,9 @@ class Cookie
         $this->hashService = $hashService ?: GeneralUtility::makeInstance(HashService::class);
     }
 
+    /**
+     * @return string[]
+     */
     public function read(): array
     {
         try {
@@ -38,6 +41,10 @@ class Cookie
         return explode('.', rtrim($data, '.'));
     }
 
+    /**
+     * @param string[] $data
+     * @return void
+     */
     public function save(array $data): void
     {
         setcookie(

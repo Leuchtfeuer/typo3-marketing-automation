@@ -19,7 +19,7 @@ class ChangeDatabaseSchemaEventListener
 {
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';
 
-    private static $sqlFieldTemplate = 'CREATE TABLE %s ( `%s` varchar(100) DEFAULT \'\' NOT NULL);';
+    private static string $sqlFieldTemplate = 'CREATE TABLE %s ( `%s` varchar(100) DEFAULT \'\' NOT NULL);';
 
     public function __invoke(AlterTableDefinitionStatementsEvent $event): void
     {
