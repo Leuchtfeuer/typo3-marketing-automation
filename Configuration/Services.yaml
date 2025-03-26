@@ -17,3 +17,10 @@ services:
 #        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 #        identifier: 'marketingAutomationPersonaPersonaRestrictionTca'
 #        method: 'addPersonaRestrictionFieldToTca'
+
+
+  Bitmotion\MarketingAutomation\EventListener\PageContentPreviewRenderingEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-page-layout'
+        event: TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent
