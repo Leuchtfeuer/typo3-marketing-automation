@@ -8,7 +8,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  *
- * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
+ * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
 namespace Bitmotion\MarketingAutomation\EventListener;
@@ -92,7 +92,7 @@ class PageContentPreviewRenderingEventListener
             }
 
             if ($relationContent) {
-                $content = '<strong>' . htmlspecialchars((string) $fieldLabel) . '</strong> ' . htmlspecialchars($relationContent);
+                $content = '<strong>' . htmlspecialchars((string)$fieldLabel) . '</strong> ' . htmlspecialchars($relationContent);
             }
         } else {
             // For static-only items
@@ -103,7 +103,7 @@ class PageContentPreviewRenderingEventListener
 
             $staticContent = BackendUtility::getLabelsFromItemsList('tt_content', $personaFieldName, $row[$personaFieldName]);
             if ($staticContent) {
-                $content = '<strong>' . htmlspecialchars((string) $fieldLabel) . '</strong> ' . htmlspecialchars($staticContent);
+                $content = '<strong>' . htmlspecialchars((string)$fieldLabel) . '</strong> ' . htmlspecialchars($staticContent);
             }
         }
 

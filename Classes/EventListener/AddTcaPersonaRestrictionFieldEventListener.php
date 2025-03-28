@@ -6,7 +6,7 @@
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  *
- * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
+ * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
 namespace Bitmotion\MarketingAutomation\EventListener;
