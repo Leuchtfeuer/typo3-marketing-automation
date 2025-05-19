@@ -5,7 +5,7 @@ declare(strict_types=1);
 defined('TYPO3') or die();
 
 (function ($extKey): void {
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_marketingautomation_persona');
+    $GLOBALS['TCA']['tx_marketingautomation_persona']['ctrl']['security']['ignorePageTypeRestriction'] = true;
 
     // Register some icons
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
