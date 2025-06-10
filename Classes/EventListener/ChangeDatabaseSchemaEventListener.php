@@ -11,7 +11,7 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\EventListener;
+namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
 use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 

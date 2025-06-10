@@ -11,9 +11,9 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\EventListener;
+namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
-use Bitmotion\MarketingAutomation\Dispatcher\Dispatcher;
+use Leuchtfeuer\MarketingAutomation\Dispatcher\Dispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Event\BeforePageIsResolvedEvent;
 

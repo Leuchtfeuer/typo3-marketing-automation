@@ -4,28 +4,28 @@ services:
     autoconfigure: true
     public: false
 
-  Bitmotion\MarketingAutomation\:
+  Leuchtfeuer\MarketingAutomation\:
       resource: '../Classes/*'
 
-  Bitmotion\MarketingAutomation\EventListener\AddTcaPersonaRestrictionFieldEventListener:
+  Leuchtfeuer\MarketingAutomation\EventListener\AddTcaPersonaRestrictionFieldEventListener:
     tags:
       - name: event.listener
         identifier: 'marketing-automation-persona-restriction-tca'
         event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 
-  Bitmotion\MarketingAutomation\EventListener\ChangeDatabaseSchemaEventListener:
+  Leuchtfeuer\MarketingAutomation\EventListener\ChangeDatabaseSchemaEventListener:
     tags:
       - name: event.listener
         identifier: 'marketing-automation-persona-restriction-database-schema'
         event: TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent
 
-  Bitmotion\MarketingAutomation\EventListener\PageContentPreviewRenderingEventListener:
+  Leuchtfeuer\MarketingAutomation\EventListener\PageContentPreviewRenderingEventListener:
     tags:
       - name: event.listener
         identifier: 'marketing-automation-page-layout'
         event: TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent
 
-  Bitmotion\MarketingAutomation\EventListener\BeforePageIsResolvedEventListener:
+  Leuchtfeuer\MarketingAutomation\EventListener\BeforePageIsResolvedEventListener:
     tags:
       - name: event.listener
         identifier: 'marketing-automation-before-page-resolved'

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\Persona;
+namespace Leuchtfeuer\MarketingAutomation\Persona;
 
 class Persona
 {
