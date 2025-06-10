@@ -11,7 +11,7 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\Dispatcher;
+namespace Leuchtfeuer\MarketingAutomation\Dispatcher;
 
 /*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
@@ -22,8 +22,8 @@ namespace Bitmotion\MarketingAutomation\Dispatcher;
  * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
  */
 
-use Bitmotion\MarketingAutomation\Persona\Persona;
-use Bitmotion\MarketingAutomation\Storage\Cookie;
+use Leuchtfeuer\MarketingAutomation\Persona\Persona;
+use Leuchtfeuer\MarketingAutomation\Storage\Cookie;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

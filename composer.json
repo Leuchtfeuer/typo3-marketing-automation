@@ -21,11 +21,11 @@
   },
   "autoload": {
     "psr-4": {
-      "Bitmotion\\MarketingAutomation\\": "Classes/"
+      "Leuchtfeuer\\MarketingAutomation\\": "Classes/"
     }
   },
   "replace": {
-    "bitmotion/marketing-automation": "self.version",
+    "leuchtfeuer/marketing-automation": "self.version",
     "typo3-ter/marketing-automation": "self.version"
   },
   "extra": {

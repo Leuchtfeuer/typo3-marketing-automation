@@ -11,6 +11,6 @@ declare(strict_types=1);
  * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
  */
 
-use Bitmotion\MarketingAutomation\Persona\PersonaRestriction;
+use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 
 $GLOBALS['TCA']['pages']['ctrl']['enablecolumns'][PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] = 'tx_marketingautomation_persona';

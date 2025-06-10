@@ -11,11 +11,11 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\Slot;
+namespace Leuchtfeuer\MarketingAutomation\Slot;
 
-use Bitmotion\MarketingAutomation\Dispatcher\SubscriberInterface;
+use Leuchtfeuer\MarketingAutomation\Dispatcher\SubscriberInterface;
 
-use Bitmotion\MarketingAutomation\Persona\Persona;
+use Leuchtfeuer\MarketingAutomation\Persona\Persona;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

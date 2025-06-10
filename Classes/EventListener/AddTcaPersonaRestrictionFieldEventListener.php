@@ -9,7 +9,7 @@
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\EventListener;
+namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;

@@ -11,9 +11,9 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\Hook;
+namespace Leuchtfeuer\MarketingAutomation\Hook;
 
-use Bitmotion\MarketingAutomation\Persona\PersonaRestriction;
+use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 
 class BackendIconOverlayHook
 {

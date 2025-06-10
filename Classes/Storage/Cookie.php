@@ -11,7 +11,7 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Bitmotion\MarketingAutomation\Storage;
+namespace Leuchtfeuer\MarketingAutomation\Storage;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
