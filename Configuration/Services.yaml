@@ -24,3 +24,9 @@ services:
       - name: event.listener
         identifier: 'marketing-automation-page-layout'
         event: TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent
+
+  Bitmotion\MarketingAutomation\EventListener\BeforePageIsResolvedEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-before-page-resolved'
+        event: TYPO3\CMS\Frontend\Event\BeforePageIsResolvedEvent
