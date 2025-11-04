@@ -20,6 +20,15 @@ use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\SingletonInterface;
 
+/**
+ * Applies persona-related query restrictions in the frontend.
+ *
+ * Breaking: Former helper methods
+ * {@see \Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::addPersonaRestrictionFieldToTca()},
+ * {@see \Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::getPersonaFieldsRequiredDatabaseSchema()},
+ * and {@see \Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::preProcess()}
+ * were moved to dedicated event listeners in marketing_automation v4.1.0.
+ */
 class PersonaRestriction implements SingletonInterface, QueryRestrictionInterface, EnforceableQueryRestrictionInterface
 {
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';

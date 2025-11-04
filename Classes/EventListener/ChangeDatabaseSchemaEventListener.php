@@ -15,6 +15,11 @@ namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
 use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 
+/**
+ * Breaking: Replaces the former
+ * {@see \Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::getPersonaFieldsRequiredDatabaseSchema()}
+ * helper that was removed in marketing_automation v4.1.0.
+ */
 class ChangeDatabaseSchemaEventListener
 {
     /**

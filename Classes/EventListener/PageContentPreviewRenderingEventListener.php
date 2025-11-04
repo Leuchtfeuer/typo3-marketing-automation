@@ -27,7 +27,11 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
 
 /**
- * Event listener for the page layout module to display persona information
+ * Event listener for the page layout module to display persona information.
+ *
+ * Breaking: Implements the functionality that was handled by
+ * {@see \Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::preProcess()}
+ * in earlier releases.
  */
 class PageContentPreviewRenderingEventListener
 {

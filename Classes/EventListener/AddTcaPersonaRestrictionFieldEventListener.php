@@ -14,6 +14,11 @@ namespace Leuchtfeuer\MarketingAutomation\EventListener;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
+/**
+ * Breaking: Replaces the former
+ * {@see \Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::addPersonaRestrictionFieldToTca()}
+ * method that was publicly available until marketing_automation v4.0.
+ */
 class AddTcaPersonaRestrictionFieldEventListener
 {
     /**
