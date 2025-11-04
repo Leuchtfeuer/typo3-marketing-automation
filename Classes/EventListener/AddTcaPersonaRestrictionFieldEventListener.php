@@ -18,6 +18,9 @@ class AddTcaPersonaRestrictionFieldEventListener
 {
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';
 
+    /**
+     * @var array<string, mixed>
+     */
     private static array $tcaFieldTemplate = [
         'label' => 'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.label',
         'config' => [

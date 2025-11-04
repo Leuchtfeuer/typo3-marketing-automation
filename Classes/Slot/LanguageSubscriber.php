@@ -24,7 +24,7 @@ class LanguageSubscriber implements SubscriberInterface
 {
     protected int $languageId = 0;
 
-    public function __construct()
+    public function __construct(private readonly \TYPO3\CMS\Core\Database\ConnectionPool $connectionPool)
     {
         try {
             $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
@@ -56,7 +56,7 @@ class LanguageSubscriber implements SubscriberInterface
             return true;
         }
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_language');
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_language');
 
         $count = (int)$queryBuilder->count('uid')
                 ->from('sys_language')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, \TYPO3\CMS\Core\Database\Connection::PARAM_INT)))->executeQuery()->fetchOne();

@@ -21,8 +21,8 @@ class BackendIconOverlayHook
      * Add a "persona" icon to record items when we have a configuration.
      *
      * @param string  $table    Name of the table to inspect.
-     * @param array   $row      The row of the actual element.
-     * @param array   $status   The actually status which already is set.
+     * @param array<string, mixed>   $row      The row of the actual element.
+     * @param array<string, mixed>   $status   The actually status which already is set.
      * @param string  $iconName icon name
      *
      * @return string the registered icon name

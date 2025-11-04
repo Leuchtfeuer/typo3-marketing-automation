@@ -40,6 +40,9 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         return $this->isEnabled();
     }
 
+    /**
+     * @param array<string, string> $queriedTables
+     */
     #[\Override]
     public function buildExpression(array $queriedTables, ExpressionBuilder $expressionBuilder): CompositeExpression
     {
