@@ -22,9 +22,6 @@ use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
  */
 class ChangeDatabaseSchemaEventListener
 {
-    /**
-     * @var string
-     */
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';
 
     /**
