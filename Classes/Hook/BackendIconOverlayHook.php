@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Leuchtfeuer\MarketingAutomation\Hook;
 
 use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 class BackendIconOverlayHook
 {
@@ -32,12 +33,42 @@ class BackendIconOverlayHook
         $personaFieldName = $GLOBALS['TCA'][$table]['ctrl']['enablecolumns'][PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] ?? '';
         $feGroupsFieldName = $GLOBALS['TCA'][$table]['ctrl']['enablecolumns']['fe_group'] ?? '';
 
-        if (!$personaFieldName || empty($row[$personaFieldName]) || !empty($status[$feGroupsFieldName])) {
+        if ($personaFieldName === '' || !empty($status[$feGroupsFieldName])) {
+            return $iconName;
+        }
+
+        $personaFieldValue = $this->resolvePersonaFieldValue($table, $row, $personaFieldName);
+
+        if ($personaFieldValue === '') {
             return $iconName;
         }
 
         $status[PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] = true;
 
         return 'overlay-frontendusers';
+    }
+
+    private function resolvePersonaFieldValue(string $table, array $row, string $personaFieldName): string
+    {
+        if (array_key_exists($personaFieldName, $row) && $row[$personaFieldName] !== null) {
+            return (string)$row[$personaFieldName];
+        }
+
+        $uid = (int)($row['uid'] ?? 0);
+        if ($uid <= 0) {
+            return '';
+        }
+
+        $record = BackendUtility::getRecord(
+            $table,
+            $uid,
+            $personaFieldName
+        );
+
+        if (!is_array($record) || !array_key_exists($personaFieldName, $record)) {
+            return '';
+        }
+
+        return (string)($record[$personaFieldName] ?? '');
     }
 }
