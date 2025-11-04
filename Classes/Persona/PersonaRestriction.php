@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Leuchtfeuer\MarketingAutomation\Persona;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;

@@ -39,16 +39,16 @@ class AddTcaPersonaRestrictionFieldEventListener
             'foreign_table_where' => 'ORDER BY tx_marketingautomation_persona.title',
             'items' => [
                 [
-                    'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.hideWhenNoMatch',
-                    -1,
+                    'label' => 'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.hideWhenNoMatch',
+                    'value' => '-1',
                 ],
                 [
-                    'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.showWhenNoMatch',
-                    -2,
+                    'label' => 'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.showWhenNoMatch',
+                    'value' => '-2',
                 ],
                 [
-                    'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.personaItemSeparator',
-                    '--div--',
+                    'label' => 'LLL:EXT:marketing_automation/Resources/Private/Language/locallang_tca.xlf:tx_marketingautomation_persona_restriction.personaItemSeparator',
+                    'value' => '--div--',
                 ],
             ],
         ],

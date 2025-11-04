@@ -15,6 +15,7 @@ namespace Leuchtfeuer\MarketingAutomation\Hook;
 
 use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use function PHPUnit\Framework\isEmpty;
 
 class BackendIconOverlayHook
 {
@@ -51,7 +52,11 @@ class BackendIconOverlayHook
     private function resolvePersonaFieldValue(string $table, array $row, string $personaFieldName): string
     {
         if (array_key_exists($personaFieldName, $row) && $row[$personaFieldName] !== null) {
-            return (string)$row[$personaFieldName];
+            $value = $row[$personaFieldName];
+
+            return is_array($value)
+                ? $this->normalizePersonaFieldValue($value)
+                : trim((string)$value);
         }
 
         $uid = (int)($row['uid'] ?? 0);
@@ -69,6 +74,25 @@ class BackendIconOverlayHook
             return '';
         }
 
-        return (string)($record[$personaFieldName] ?? '');
+        $value = $record[$personaFieldName] ?? '';
+
+        return is_array($value)
+            ? $this->normalizePersonaFieldValue($value)
+            : trim((string)$value);
+    }
+
+    private function normalizePersonaFieldValue(array $value): string
+    {
+        $flattened = [];
+        array_walk_recursive(
+            $value,
+            static function ($item) use (&$flattened): void {
+                if ($item !== null && $item !== '') {
+                    $flattened[] = (string)$item;
+                }
+            }
+        );
+
+        return implode(',', $flattened);
     }
 }
