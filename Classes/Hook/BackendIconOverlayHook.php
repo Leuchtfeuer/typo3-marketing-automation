@@ -49,6 +49,9 @@ class BackendIconOverlayHook
         return 'overlay-frontendusers';
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     private function resolvePersonaFieldValue(string $table, array $row, string $personaFieldName): string
     {
         if (array_key_exists($personaFieldName, $row) && $row[$personaFieldName] !== null) {
@@ -81,6 +84,9 @@ class BackendIconOverlayHook
             : trim((string)$value);
     }
 
+    /**
+     * @param array<int|string, mixed> $value
+     */
     private function normalizePersonaFieldValue(array $value): string
     {
         $flattened = [];
