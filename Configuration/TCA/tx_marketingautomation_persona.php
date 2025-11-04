@@ -26,6 +26,9 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
+        'security' => [
+            'ignorePageTypeRestriction' => true,
+        ],
         'typeicon_classes' => [
             'default' => 'mimetypes-x-tx_marketingautomation_persona',
         ],

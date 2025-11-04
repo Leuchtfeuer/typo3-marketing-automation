@@ -2,18 +2,25 @@
 
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Leuchtfeuer\MarketingAutomation\Dispatcher\Dispatcher;
+use Leuchtfeuer\MarketingAutomation\Slot\LanguageSubscriber;
+use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
+use Leuchtfeuer\MarketingAutomation\Hook\BackendIconOverlayHook;
+use TYPO3\CMS\Core\Imaging\IconFactory;
+
 defined('TYPO3') or die();
 
 (function ($extKey): void {
-    $marketingDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Leuchtfeuer\MarketingAutomation\Dispatcher\Dispatcher::class);
-    $marketingDispatcher->addSubscriber(\Leuchtfeuer\MarketingAutomation\Slot\LanguageSubscriber::class);
-    $marketingDispatcher->addListener(\Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::class . '->fetchCurrentPersona');
+    $marketingDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
+    $marketingDispatcher->addSubscriber(LanguageSubscriber::class);
+    $marketingDispatcher->addListener(PersonaRestriction::class . '->fetchCurrentPersona');
 
-    if (!isset($GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][\Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::class])) {
-        $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][\Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::class] = [];
+    if (!isset($GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][PersonaRestriction::class])) {
+        $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][PersonaRestriction::class] = [];
     }
 
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][\Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::class] = \Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction::class . '->addPersonaToCacheIdentifier';
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][\TYPO3\CMS\Core\Imaging\IconFactory::class]['overrideIconOverlay'][] = \Leuchtfeuer\MarketingAutomation\Hook\BackendIconOverlayHook::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][PersonaRestriction::class] = PersonaRestriction::class . '->addPersonaToCacheIdentifier';
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][IconFactory::class]['overrideIconOverlay'][] = BackendIconOverlayHook::class;
 
 })('marketing_automation');
