@@ -14,14 +14,17 @@ declare(strict_types=1);
 namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
 use Leuchtfeuer\MarketingAutomation\Dispatcher\Dispatcher;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Event\BeforePageIsResolvedEvent;
 
 class BeforePageIsResolvedEventListener
 {
+    public function __construct(
+        private readonly Dispatcher $dispatcher
+    ) {
+    }
+
     public function __invoke(BeforePageIsResolvedEvent $event): void
     {
-        $dispatcher = GeneralUtility::makeInstance(Dispatcher::class);
-        $dispatcher->dispatch();
+        $this->dispatcher->dispatch();
     }
 } 

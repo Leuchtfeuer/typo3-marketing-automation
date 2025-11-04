@@ -31,85 +31,159 @@ use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
  */
 class PageContentPreviewRenderingEventListener
 {
+    private const TABLE_NAME = 'tt_content';
+
     public function __invoke(PageContentPreviewRenderingEvent $event): void
     {
         $row = $event->getRecord();
-        $personaFieldName = $GLOBALS['TCA']['tt_content']['ctrl']['enablecolumns'][PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] ?? '';
+        $personaFieldName = $this->getPersonaFieldName();
 
-        if ($personaFieldName === '' || ($row[$personaFieldName] ?? '') === '') {
+        if (!$this->hasPersonaRestriction($personaFieldName, $row)) {
             return;
         }
 
-        // Unfortunately TYPO3 does not cope with mixed static and relational items, thus we must process them separately
-        $staticItems = implode(
-            ',',
-            array_filter(
-                explode(',', (string)$row[$personaFieldName]),
-                fn($item): bool => $item < 0
-            )
-        );
-        $relationItems = implode(
-            ',',
-            array_filter(
-                explode(',', (string)$row[$personaFieldName]),
-                fn($item): bool => $item > 0
-            )
-        );
+        $personaFieldValue = (string)($row[$personaFieldName] ?? '');
+        $content = $this->buildPreviewContent($personaFieldName, $personaFieldValue, $row);
 
-        $content = '';
-        if ($relationItems !== '' && $relationItems !== '0') {
-            $rowWithRelationItems = $row;
-            $rowWithRelationItems[$personaFieldName] = $relationItems;
+        if ($content !== '') {
+            $event->setPreviewContent($event->getPreviewContent() . $content);
+        }
+    }
 
-            // Get the label for the field first
-            $fieldLabel = $GLOBALS['TCA']['tt_content']['columns'][$personaFieldName]['label'] ?? $personaFieldName;
-            if (is_string($fieldLabel) && str_starts_with($fieldLabel, 'LLL:')) {
-                $fieldLabel = $GLOBALS['LANG']->sL($fieldLabel);
-            }
+    private function getPersonaFieldName(): string
+    {
+        return $GLOBALS['TCA'][self::TABLE_NAME]['ctrl']['enablecolumns'][PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] ?? '';
+    }
 
-            // Get the values for relation items
-            $relationContent = BackendUtility::getRecordTitlePrep(
-                BackendUtility::getProcessedValue(
-                    'tt_content',
-                    $personaFieldName,
-                    $rowWithRelationItems[$personaFieldName],
-                    0,
-                    false,
-                    false,
-                    $rowWithRelationItems['uid']
-                )
-            );
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function hasPersonaRestriction(string $personaFieldName, array $row): bool
+    {
+        return $personaFieldName !== '' && ($row[$personaFieldName] ?? '') !== '';
+    }
 
-            // Get the values for static items
-            $staticContent = '';
-            if ($staticItems !== '' && $staticItems !== '0') {
-                $staticContent = BackendUtility::getLabelsFromItemsList('tt_content', $personaFieldName, $staticItems);
-                if ($staticContent && $relationContent) {
-                    $relationContent .= ', ' . $staticContent;
-                } elseif ($staticContent) {
-                    $relationContent = $staticContent;
-                }
-            }
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function buildPreviewContent(string $personaFieldName, string $personaFieldValue, array $row): string
+    {
+        $staticItems = $this->extractStaticItems($personaFieldValue);
+        $relationItems = $this->extractRelationItems($personaFieldValue);
 
-            if ($relationContent) {
-                $content = '<strong>' . htmlspecialchars((string)$fieldLabel) . '</strong> ' . htmlspecialchars($relationContent);
-            }
-        } else {
-            // For static-only items
-            $fieldLabel = $GLOBALS['TCA']['tt_content']['columns'][$personaFieldName]['label'] ?? $personaFieldName;
-            if (is_string($fieldLabel) && str_starts_with($fieldLabel, 'LLL:')) {
-                $fieldLabel = $GLOBALS['LANG']->sL($fieldLabel);
-            }
-
-            $staticContent = BackendUtility::getLabelsFromItemsList('tt_content', $personaFieldName, $row[$personaFieldName]);
-            if ($staticContent) {
-                $content = '<strong>' . htmlspecialchars((string)$fieldLabel) . '</strong> ' . htmlspecialchars($staticContent);
-            }
+        if ($relationItems !== '') {
+            return $this->buildContentWithRelations($personaFieldName, $relationItems, $staticItems, $row);
         }
 
-        if ($content !== '' && $content !== '0') {
-            $previewContent = $event->getPreviewContent();
-            $event->setPreviewContent($previewContent . $content);
+        return $this->buildContentWithStaticItemsOnly($personaFieldName, $personaFieldValue);
+    }
+
+    private function extractStaticItems(string $value): string
+    {
+        return implode(
+            ',',
+            array_filter(
+                explode(',', $value),
+                static fn($item): bool => $item < 0
+            )
+        );
+    }
+
+    private function extractRelationItems(string $value): string
+    {
+        return implode(
+            ',',
+            array_filter(
+                explode(',', $value),
+                static fn($item): bool => $item > 0
+            )
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function buildContentWithRelations(
+        string $personaFieldName,
+        string $relationItems,
+        string $staticItems,
+        array $row
+    ): string {
+        $fieldLabel = $this->getFieldLabel($personaFieldName);
+        $relationContent = $this->getRelationContent($personaFieldName, $relationItems, $row);
+        $combinedContent = $this->combineWithStaticItems($personaFieldName, $relationContent, $staticItems);
+
+        return $this->formatContent($fieldLabel, $combinedContent);
+    }
+
+    private function buildContentWithStaticItemsOnly(string $personaFieldName, string $personaFieldValue): string
+    {
+        $fieldLabel = $this->getFieldLabel($personaFieldName);
+        $staticContent = BackendUtility::getLabelsFromItemsList(self::TABLE_NAME, $personaFieldName, $personaFieldValue);
+
+        return $this->formatContent($fieldLabel, $staticContent);
+    }
+
+    private function getFieldLabel(string $personaFieldName): string
+    {
+        $fieldLabel = $GLOBALS['TCA'][self::TABLE_NAME]['columns'][$personaFieldName]['label'] ?? $personaFieldName;
+
+        if (is_string($fieldLabel) && str_starts_with($fieldLabel, 'LLL:')) {
+            return $GLOBALS['LANG']->sL($fieldLabel);
         }
+
+        return (string)$fieldLabel;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function getRelationContent(string $personaFieldName, string $relationItems, array $row): string
+    {
+        $rowWithRelationItems = $row;
+        $rowWithRelationItems[$personaFieldName] = $relationItems;
+
+        return BackendUtility::getRecordTitlePrep(
+            BackendUtility::getProcessedValue(
+                self::TABLE_NAME,
+                $personaFieldName,
+                $rowWithRelationItems[$personaFieldName],
+                0,
+                false,
+                false,
+                $rowWithRelationItems['uid']
+            )
+        );
+    }
+
+    private function combineWithStaticItems(
+        string $personaFieldName,
+        string $relationContent,
+        string $staticItems
+    ): string {
+        if ($staticItems === '') {
+            return $relationContent;
+        }
+
+        $staticContent = BackendUtility::getLabelsFromItemsList(self::TABLE_NAME, $personaFieldName, $staticItems);
+
+        if ($staticContent === '') {
+            return $relationContent;
+        }
+
+        if ($relationContent === '') {
+            return $staticContent;
+        }
+
+        return $relationContent . ', ' . $staticContent;
+    }
+
+    private function formatContent(string $fieldLabel, string $content): string
+    {
+        if ($content === '') {
+            return '';
+        }
+
+        return '<strong>' . htmlspecialchars($fieldLabel) . '</strong> ' . htmlspecialchars($content);
     }
 }

@@ -19,12 +19,13 @@ use Leuchtfeuer\MarketingAutomation\Persona\Persona;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\Connection;
 
 class LanguageSubscriber implements SubscriberInterface
 {
     protected int $languageId = 0;
 
-    public function __construct(private readonly \TYPO3\CMS\Core\Database\ConnectionPool $connectionPool)
+    public function __construct(private readonly ?ConnectionPool $connectionPool = null)
     {
         try {
             $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
@@ -59,7 +60,10 @@ class LanguageSubscriber implements SubscriberInterface
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_language');
 
         $count = (int)$queryBuilder->count('uid')
-                ->from('sys_language')->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, \TYPO3\CMS\Core\Database\Connection::PARAM_INT)))->executeQuery()->fetchOne();
+                ->from('sys_language')
+                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, Connection::PARAM_INT)))
+                ->executeQuery()
+                ->fetchOne();
 
         return $count === 1;
     }
