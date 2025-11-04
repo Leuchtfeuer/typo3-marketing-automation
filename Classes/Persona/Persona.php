@@ -19,11 +19,13 @@ class Persona
 
     public function isValid(): bool
     {
+        // @extensionScannerIgnoreLine
         return $this->id !== 0;
     }
 
     public function getId(): int
     {
+        // @extensionScannerIgnoreLine
         return $this->id;
     }
 
@@ -35,6 +37,7 @@ class Persona
     public function withId(int $id): self
     {
         $clonedObject = clone $this;
+        // @extensionScannerIgnoreLine
         $clonedObject->id = $id;
 
         return $clonedObject;
