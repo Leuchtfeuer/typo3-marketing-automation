@@ -21,9 +21,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
  */
 class AddTcaPersonaRestrictionFieldEventListener
 {
-    /**
-     * @var string
-     */
+
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';
 
     /**
