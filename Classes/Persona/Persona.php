@@ -2,36 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Bitmotion\MarketingAutomation\Persona;
-
 /*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  *
- * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
+ * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
+
+namespace Leuchtfeuer\MarketingAutomation\Persona;
 
 class Persona
 {
-    protected $id = 0;
-
-    protected $language = 0;
-
-    public function __construct(int $id, int $language)
-    {
-        $this->id = $id;
-        $this->language = $language;
-    }
+    public function __construct(protected int $id, protected int $language) {}
 
     public function isValid(): bool
     {
+        // @extensionScannerIgnoreLine
         return $this->id !== 0;
     }
 
     public function getId(): int
     {
+        // @extensionScannerIgnoreLine
         return $this->id;
     }
 
@@ -43,6 +37,7 @@ class Persona
     public function withId(int $id): self
     {
         $clonedObject = clone $this;
+        // @extensionScannerIgnoreLine
         $clonedObject->id = $id;
 
         return $clonedObject;

@@ -15,13 +15,13 @@
     "email": "dev@Leuchtfeuer.com"
   },
   "require": {
-    "typo3/cms-backend": "^10.4.2 || ^11.5",
-    "typo3/cms-core": "^10.4.2 || ^11.5",
-    "typo3/cms-extbase": "^10.4.2 || ^11.5"
+    "typo3/cms-backend": "^12.4",
+    "typo3/cms-core": "^12.4",
+    "typo3/cms-extbase": "^12.4"
   },
   "autoload": {
     "psr-4": {
-      "Bitmotion\\MarketingAutomation\\": "Classes/"
+      "Leuchtfeuer\\MarketingAutomation\\": "Classes/"
     }
   },
   "replace": {

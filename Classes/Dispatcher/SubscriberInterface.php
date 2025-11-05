@@ -2,7 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Bitmotion\MarketingAutomation\Dispatcher;
+/*
+ * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
+ */
+
+namespace Leuchtfeuer\MarketingAutomation\Dispatcher;
 
 /*
  * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
@@ -13,7 +22,7 @@ namespace Bitmotion\MarketingAutomation\Dispatcher;
  * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
  */
 
-use Bitmotion\MarketingAutomation\Persona\Persona;
+use Leuchtfeuer\MarketingAutomation\Persona\Persona;
 
 interface SubscriberInterface
 {

@@ -4,16 +4,29 @@ services:
     autoconfigure: true
     public: false
 
-  Bitmotion\MarketingAutomation\:
+  Leuchtfeuer\MarketingAutomation\:
       resource: '../Classes/*'
 
-  Bitmotion\MarketingAutomation\Persona\PersonaRestriction:
+  Leuchtfeuer\MarketingAutomation\EventListener\AddTcaPersonaRestrictionFieldEventListener:
     tags:
       - name: event.listener
-        event: TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent
-        identifier: 'marketingAutomationPersonaPersonaRestrictionDatabaseSchema'
-        method: 'getPersonaFieldsRequiredDatabaseSchema'
-      - name: event.listener
+        identifier: 'marketing-automation-persona-restriction-tca'
         event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
-        identifier: 'marketingAutomationPersonaPersonaRestrictionTca'
-        method: 'addPersonaRestrictionFieldToTca'
+
+  Leuchtfeuer\MarketingAutomation\EventListener\ChangeDatabaseSchemaEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-persona-restriction-database-schema'
+        event: TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent
+
+  Leuchtfeuer\MarketingAutomation\EventListener\PageContentPreviewRenderingEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-page-layout'
+        event: TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent
+
+  Leuchtfeuer\MarketingAutomation\EventListener\BeforePageIsResolvedEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-before-page-resolved'
+        event: TYPO3\CMS\Frontend\Event\BeforePageIsResolvedEvent
