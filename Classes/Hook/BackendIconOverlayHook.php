@@ -15,7 +15,6 @@ namespace Leuchtfeuer\MarketingAutomation\Hook;
 
 use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use function PHPUnit\Framework\isEmpty;
 
 class BackendIconOverlayHook
 {

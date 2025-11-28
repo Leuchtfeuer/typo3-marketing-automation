@@ -20,11 +20,10 @@ class BeforePageIsResolvedEventListener
 {
     public function __construct(
         private readonly Dispatcher $dispatcher
-    ) {
-    }
+    ) {}
 
     public function __invoke(BeforePageIsResolvedEvent $event): void
     {
         $this->dispatcher->dispatch();
     }
-} 
+}

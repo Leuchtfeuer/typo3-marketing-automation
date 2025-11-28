@@ -11,7 +11,6 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-
 namespace Leuchtfeuer\MarketingAutomation\Persona;
 
 use Psr\Http\Message\ServerRequestInterface;

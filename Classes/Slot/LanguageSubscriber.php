@@ -17,9 +17,9 @@ use Leuchtfeuer\MarketingAutomation\Dispatcher\SubscriberInterface;
 
 use Leuchtfeuer\MarketingAutomation\Persona\Persona;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Database\Connection;
 
 class LanguageSubscriber implements SubscriberInterface
 {
