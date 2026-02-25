@@ -19,7 +19,6 @@ return [
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'delete' => 'deleted',
-        'sortby' => 'sorting',
         'searchFields' => 'title,description',
         'enablecolumns' => [
             'disabled' => 'hidden',
