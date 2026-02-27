@@ -78,6 +78,11 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
                         $fieldName,
                         $expressionBuilder->literal('-2')
                     );
+                } else {
+                    $constraints[] = $expressionBuilder->inSet(
+                        $fieldName,
+                        $expressionBuilder->literal('-1')
+                    );
                 }
             }
         }
