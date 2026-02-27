@@ -28,6 +28,8 @@ return [
         ],
         'security' => [
             'ignorePageTypeRestriction' => true,
+            'ignoreRootLevelRestriction' => true,
+            'ignoreWebMountRestriction' => true,
         ],
         'typeicon_classes' => [
             'default' => 'mimetypes-x-tx_marketingautomation_persona',
