@@ -11,41 +11,33 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Leuchtfeuer\MarketingAutomation\Hook;
+namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
 use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent;
 
-class BackendIconOverlayHook
+class ModifyRecordOverlayIconIdentifierEventListener
 {
-    /**
-     * Add a "persona" icon to record items when we have a configuration.
-     *
-     * @param string  $table    Name of the table to inspect.
-     * @param array<string, mixed>   $row      The row of the actual element.
-     * @param array<string, mixed>   $status   The actually status which already is set.
-     * @param string  $iconName icon name
-     *
-     * @return string the registered icon name
-     */
-    public function postOverlayPriorityLookup(string $table, array $row, array &$status, string $iconName): string
+    public function __invoke(ModifyRecordOverlayIconIdentifierEvent $event): void
     {
+        $table = $event->getTable();
+        $row = $event->getRow();
+
         $personaFieldName = $GLOBALS['TCA'][$table]['ctrl']['enablecolumns'][PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] ?? '';
         $feGroupsFieldName = $GLOBALS['TCA'][$table]['ctrl']['enablecolumns']['fe_group'] ?? '';
 
-        if ($personaFieldName === '' || !empty($status[$feGroupsFieldName])) {
-            return $iconName;
+        if ($personaFieldName === '' || !empty($event->getStatus()[$feGroupsFieldName])) {
+            return;
         }
 
         $personaFieldValue = $this->resolvePersonaFieldValue($table, $row, $personaFieldName);
 
         if ($personaFieldValue === '') {
-            return $iconName;
+            return;
         }
 
-        $status[PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] = true;
-
-        return 'overlay-frontendusers';
+        $event->setOverlayIconIdentifier('overlay-frontendusers');
     }
 
     /**

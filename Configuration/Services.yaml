@@ -36,3 +36,9 @@ services:
       - name: event.listener
         identifier: 'marketing-automation-cache-identifier'
         event: TYPO3\CMS\Frontend\Event\BeforePageCacheIdentifierIsHashedEvent
+
+  Leuchtfeuer\MarketingAutomation\EventListener\ModifyRecordOverlayIconIdentifierEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-icon-overlay'
+        event: TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent

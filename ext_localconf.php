@@ -6,8 +6,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Leuchtfeuer\MarketingAutomation\Dispatcher\Dispatcher;
 use Leuchtfeuer\MarketingAutomation\Slot\LanguageSubscriber;
 use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
-use Leuchtfeuer\MarketingAutomation\Hook\BackendIconOverlayHook;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 
 defined('TYPO3') or die();
 
@@ -20,6 +18,5 @@ defined('TYPO3') or die();
         $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][PersonaRestriction::class] = [];
     }
 
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][IconFactory::class]['overrideIconOverlay'][] = BackendIconOverlayHook::class;
 
 })('marketing_automation');
