@@ -32,7 +32,7 @@ class Cookie
     public function read(): array
     {
         try {
-            $data = $this->hashService->validateAndStripHmac($_COOKIE[$this->cookieName] ?? '');
+            $data = $this->hashService->validateAndStripHmac($_COOKIE[$this->cookieName] ?? '', $this->cookieName);
         } catch (InvalidHashStringException) {
             $data = '';
         }
@@ -47,7 +47,7 @@ class Cookie
     {
         setcookie(
             $this->cookieName,
-            $this->hashService->appendHmac(implode('.', $data) . '.'),
+            $this->hashService->appendHmac(implode('.', $data) . '.', $this->cookieName),
             ['expires' => time() + $this->cookieLifetime, 'path' => '/', 'domain' => '', 'secure' => false, 'httponly' => true]
         );
     }

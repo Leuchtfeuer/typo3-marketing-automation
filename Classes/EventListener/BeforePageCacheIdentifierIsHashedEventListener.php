@@ -24,9 +24,9 @@ class BeforePageCacheIdentifierIsHashedEventListener
     {
         $persona = $this->personaRestriction->getCurrentPersona();
         if ($persona !== null && $persona->isValid()) {
-            $params = $event->getCacheIdentifierParameters();
+            $params = $event->getPageCacheIdentifierParameters();
             $params[PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] = (string)$persona->getId();
-            $event->setCacheIdentifierParameters($params);
+            $event->setPageCacheIdentifierParameters($params);
         }
     }
 }
