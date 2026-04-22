@@ -17,15 +17,13 @@ use Leuchtfeuer\MarketingAutomation\Dispatcher\SubscriberInterface;
 
 use Leuchtfeuer\MarketingAutomation\Persona\Persona;
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LanguageSubscriber implements SubscriberInterface
 {
     protected int $languageId = 0;
 
-    public function __construct(private readonly ?ConnectionPool $connectionPool = null)
+    public function __construct()
     {
         try {
             $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
@@ -57,14 +55,16 @@ class LanguageSubscriber implements SubscriberInterface
             return true;
         }
 
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_language');
-
-        $count = (int)$queryBuilder->count('uid')
-                ->from('sys_language')
-                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($this->languageId, Connection::PARAM_INT)))
-                ->executeQuery()
-                ->fetchOne();
-
-        return $count === 1;
+        try {
+            $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+            if ($request === null) {
+                return false;
+            }
+            $site = $request->getAttribute('site');
+            $site->getLanguageById($this->languageId);
+            return true;
+        } catch (\InvalidArgumentException) {
+            return false;
+        }
     }
 }
