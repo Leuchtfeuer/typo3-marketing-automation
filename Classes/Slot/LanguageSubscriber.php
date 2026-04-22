@@ -40,6 +40,7 @@ class LanguageSubscriber implements SubscriberInterface
             $this->languageId = 0;
         }
 
+        // @extensionScannerIgnoreLine
         return $this->languageId !== $newPersona->getLanguage();
     }
 

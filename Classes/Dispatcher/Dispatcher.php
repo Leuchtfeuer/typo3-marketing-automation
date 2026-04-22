@@ -79,6 +79,7 @@ class Dispatcher implements SingletonInterface
         if ($currentPersona !== $newPersona) {
             $storage->save([
                 (string)$newPersona->getId(),
+                // @extensionScannerIgnoreLine
                 (string)$newPersona->getLanguage(),
             ]);
         }
