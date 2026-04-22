@@ -20,7 +20,6 @@ defined('TYPO3') or die();
         $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][PersonaRestriction::class] = [];
     }
 
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_fe.php']['createHashBase'][PersonaRestriction::class] = PersonaRestriction::class . '->addPersonaToCacheIdentifier';
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS'][IconFactory::class]['overrideIconOverlay'][] = BackendIconOverlayHook::class;
 
 })('marketing_automation');

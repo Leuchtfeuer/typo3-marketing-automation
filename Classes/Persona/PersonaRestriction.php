@@ -44,6 +44,11 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
         $this->persona = $persona;
     }
 
+    public function getCurrentPersona(): ?Persona
+    {
+        return $this->persona;
+    }
+
     #[\Override]
     public function isEnforced(): bool
     {
@@ -96,15 +101,4 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
             && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
     }
 
-    /**
-     * Modify the cache hash to add persona dimension if applicable
-     *
-     * @param array<mixed> &$params Array of parameters: hashParameters, createLockHashBase
-     */
-    public function addPersonaToCacheIdentifier(&$params): void
-    {
-        if ($this->persona->isValid()) {
-            $params['hashParameters'][self::PERSONA_ENABLE_FIELDS_KEY] = (string)$this->persona->getId();
-        }
-    }
 }
