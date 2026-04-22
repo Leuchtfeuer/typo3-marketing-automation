@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Leuchtfeuer\MarketingAutomation\Storage;
 
+use TYPO3\CMS\Core\Crypto\HashService;
+use TYPO3\CMS\Core\Exception\Crypto\InvalidHashStringException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
-use TYPO3\CMS\Extbase\Security\Exception\InvalidArgumentForHashGenerationException;
-use TYPO3\CMS\Extbase\Security\Exception\InvalidHashException;
 
 class Cookie
 {
@@ -34,7 +33,7 @@ class Cookie
     {
         try {
             $data = $this->hashService->validateAndStripHmac($_COOKIE[$this->cookieName] ?? '');
-        } catch (InvalidArgumentForHashGenerationException|InvalidHashException) {
+        } catch (InvalidHashStringException) {
             $data = '';
         }
 
