@@ -19,7 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Cookie
 {
-    protected HashService $hashService;
+    protected ?HashService $hashService;
 
     public function __construct(protected string $cookieName, protected int $cookieLifetime, HashService $hashService = null)
     {
@@ -45,10 +45,11 @@ class Cookie
      */
     public function save(array $data): void
     {
+        $isSecure = ($GLOBALS['TYPO3_REQUEST'] ?? null)?->getUri()->getScheme() === 'https';
         setcookie(
             $this->cookieName,
             $this->hashService->appendHmac(implode('.', $data) . '.', $this->cookieName),
-            ['expires' => time() + $this->cookieLifetime, 'path' => '/', 'domain' => '', 'secure' => false, 'httponly' => true]
+            ['expires' => time() + $this->cookieLifetime, 'path' => '/', 'domain' => '', 'secure' => $isSecure, 'httponly' => true]
         );
     }
 }
