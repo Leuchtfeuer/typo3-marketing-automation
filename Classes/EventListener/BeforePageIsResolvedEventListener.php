@@ -14,18 +14,16 @@ declare(strict_types=1);
 namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
 use Leuchtfeuer\MarketingAutomation\Dispatcher\Dispatcher;
-use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 use TYPO3\CMS\Frontend\Event\BeforePageIsResolvedEvent;
 
 class BeforePageIsResolvedEventListener
 {
     public function __construct(
-        private readonly Dispatcher $dispatcher,
-        private readonly PersonaRestriction $personaRestriction,
+        private readonly Dispatcher $dispatcher
     ) {}
 
     public function __invoke(BeforePageIsResolvedEvent $event): void
     {
-        $this->dispatcher->dispatch($this->personaRestriction);
+        $this->dispatcher->dispatch();
     }
 }
