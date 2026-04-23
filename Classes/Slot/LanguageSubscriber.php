@@ -62,6 +62,9 @@ class LanguageSubscriber implements SubscriberInterface
                 return false;
             }
             $site = $request->getAttribute('site');
+            if ($site === null) {
+                return false;
+            }
             $site->getLanguageById($this->languageId);
             return true;
         } catch (\InvalidArgumentException) {
