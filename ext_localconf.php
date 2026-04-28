@@ -12,11 +12,7 @@ defined('TYPO3') or die();
 (function ($extKey): void {
     $marketingDispatcher = GeneralUtility::makeInstance(Dispatcher::class);
     $marketingDispatcher->addSubscriber(LanguageSubscriber::class);
-    $marketingDispatcher->addListener(PersonaRestriction::class . '->fetchCurrentPersona');
 
-    if (!isset($GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][PersonaRestriction::class])) {
-        $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][PersonaRestriction::class] = [];
-    }
-
+    $GLOBALS['TYPO3_CONF_VARS']['DB']['additionalQueryRestrictions'][PersonaRestriction::class] ??= [];
 
 })('marketing_automation');

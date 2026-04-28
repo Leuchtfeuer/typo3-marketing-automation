@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
+use Leuchtfeuer\MarketingAutomation\Persona\Persona;
 use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 use TYPO3\CMS\Frontend\Event\BeforePageCacheIdentifierIsHashedEvent;
 
@@ -23,7 +24,7 @@ class BeforePageCacheIdentifierIsHashedEventListener
     public function __invoke(BeforePageCacheIdentifierIsHashedEvent $event): void
     {
         $persona = $this->personaRestriction->getCurrentPersona();
-        if ($persona !== null && $persona->isValid()) {
+        if ($persona instanceof Persona && $persona->isValid()) {
             $params = $event->getPageCacheIdentifierParameters();
             $params[PersonaRestriction::PERSONA_ENABLE_FIELDS_KEY] = (string)$persona->getId();
             $event->setPageCacheIdentifierParameters($params);

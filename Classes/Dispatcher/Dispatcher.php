@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Leuchtfeuer\MarketingAutomation\Dispatcher;
 
 use Leuchtfeuer\MarketingAutomation\Persona\Persona;
+use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 use Leuchtfeuer\MarketingAutomation\Storage\Cookie;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -41,7 +42,7 @@ class Dispatcher implements SingletonInterface
         $this->listeners[] = $className;
     }
 
-    public function dispatch(): void
+    public function dispatch(PersonaRestriction $personaRestriction): void
     {
         $extensionConfiguration = $this->getExtensionConfiguration();
         $storage = GeneralUtility::makeInstance(Cookie::class, $extensionConfiguration['cookieName'], (int)$extensionConfiguration['cookieLifetime']);
@@ -73,6 +74,8 @@ class Dispatcher implements SingletonInterface
                 (string)$newPersona->getLanguage(),
             ]);
         }
+
+        $personaRestriction->fetchCurrentPersona($newPersona);
 
         foreach ($this->listeners as $listener) {
             $ref = null;
