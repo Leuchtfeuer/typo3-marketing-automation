@@ -21,7 +21,7 @@ class Cookie
 {
     protected ?HashService $hashService;
 
-    public function __construct(protected string $cookieName, protected int $cookieLifetime, HashService $hashService = null)
+    public function __construct(protected string $cookieName, protected int $cookieLifetime, ?HashService $hashService = null)
     {
         $this->hashService = $hashService ?: GeneralUtility::makeInstance(HashService::class);
     }
