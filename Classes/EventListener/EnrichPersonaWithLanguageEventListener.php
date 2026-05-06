@@ -11,17 +11,15 @@ declare(strict_types=1);
  * (c) 2025 Leuchtfeuer Digital Marketing <dev@leuchtfeuer.com>
  */
 
-namespace Leuchtfeuer\MarketingAutomation\Slot;
+namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
-use Leuchtfeuer\MarketingAutomation\Dispatcher\SubscriberInterface;
-
-use Leuchtfeuer\MarketingAutomation\Persona\Persona;
+use Leuchtfeuer\MarketingAutomation\Event\EnrichPersonaEvent;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class LanguageSubscriber implements SubscriberInterface
+final class EnrichPersonaWithLanguageEventListener
 {
-    protected int $languageId = 0;
+    private int $languageId = 0;
 
     public function __construct()
     {
@@ -33,24 +31,22 @@ class LanguageSubscriber implements SubscriberInterface
         }
     }
 
-    #[\Override]
-    public function needsUpdate(Persona $currentPersona, Persona $newPersona): bool
+    public function __invoke(EnrichPersonaEvent $event): void
     {
         if (!$this->isValidLanguageId()) {
             $this->languageId = 0;
         }
 
+        $persona = $event->getPersona();
         // @extensionScannerIgnoreLine
-        return $this->languageId !== $newPersona->getLanguage();
+        if ($this->languageId === $persona->getLanguage()) {
+            return;
+        }
+
+        $event->setPersona($persona->withLanguage($this->languageId));
     }
 
-    #[\Override]
-    public function update(Persona $persona): Persona
-    {
-        return $persona->withLanguage($this->languageId);
-    }
-
-    protected function isValidLanguageId(): bool
+    private function isValidLanguageId(): bool
     {
         if ($this->languageId === 0) {
             return true;
