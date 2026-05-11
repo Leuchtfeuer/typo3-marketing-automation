@@ -41,7 +41,7 @@ final class PersonaResolver
         $data = $cookie->read();
         $id = (int)($data[0] ?? 0);
         $language = (int)($data[1] ?? -1);
-        $currentPersona = GeneralUtility::makeInstance(Persona::class, $id, $language);
+        $currentPersona = new Persona($id, $language);
 
         $event = new EnrichPersonaEvent($currentPersona, $currentPersona);
         $this->eventDispatcher->dispatch($event);
@@ -71,8 +71,7 @@ final class PersonaResolver
         $this->personaRestriction->fetchCurrentPersona($newPersona);
 
         foreach ($this->legacyDispatcher->getListeners() as $listener) {
-            $ref = null;
-            GeneralUtility::callUserFunction($listener, $newPersona, $ref);
+            GeneralUtility::callUserFunction($listener, $newPersona, null);
         }
     }
 
