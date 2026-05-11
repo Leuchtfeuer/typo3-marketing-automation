@@ -30,3 +30,21 @@ services:
       - name: event.listener
         identifier: 'marketing-automation-before-page-resolved'
         event: TYPO3\CMS\Frontend\Event\BeforePageIsResolvedEvent
+
+  Leuchtfeuer\MarketingAutomation\EventListener\EnrichPersonaWithLanguageEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-enrich-persona-with-language'
+        event: Leuchtfeuer\MarketingAutomation\Event\EnrichPersonaEvent
+
+  Leuchtfeuer\MarketingAutomation\EventListener\BeforePageCacheIdentifierIsHashedEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-cache-identifier'
+        event: TYPO3\CMS\Frontend\Event\BeforePageCacheIdentifierIsHashedEvent
+
+  Leuchtfeuer\MarketingAutomation\EventListener\ModifyRecordOverlayIconIdentifierEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'marketing-automation-icon-overlay'
+        event: TYPO3\CMS\Core\Imaging\Event\ModifyRecordOverlayIconIdentifierEvent

@@ -13,17 +13,17 @@ declare(strict_types=1);
 
 namespace Leuchtfeuer\MarketingAutomation\EventListener;
 
-use Leuchtfeuer\MarketingAutomation\Dispatcher\Dispatcher;
+use Leuchtfeuer\MarketingAutomation\Persona\PersonaResolver;
 use TYPO3\CMS\Frontend\Event\BeforePageIsResolvedEvent;
 
 class BeforePageIsResolvedEventListener
 {
     public function __construct(
-        private readonly Dispatcher $dispatcher
+        private readonly PersonaResolver $personaResolver,
     ) {}
 
     public function __invoke(BeforePageIsResolvedEvent $event): void
     {
-        $this->dispatcher->dispatch();
+        $this->personaResolver->resolve();
     }
 }

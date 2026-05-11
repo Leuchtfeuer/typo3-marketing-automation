@@ -13,21 +13,18 @@ declare(strict_types=1);
 
 namespace Leuchtfeuer\MarketingAutomation\Dispatcher;
 
-/*
- * This file is part of the "Marketing Automation" extension for TYPO3 CMS.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * Team Yoda <dev@Leuchtfeuer.com>, Leuchtfeuer Digital Marketing
- */
-
-use Leuchtfeuer\MarketingAutomation\Persona\Persona;
-use Leuchtfeuer\MarketingAutomation\Storage\Cookie;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use Leuchtfeuer\MarketingAutomation\Persona\PersonaResolver;
+use Leuchtfeuer\MarketingAutomation\Persona\PersonaRestriction;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/**
+ * @deprecated since v13, will be removed in v14. Use the PSR-14 event
+ * {@see \Leuchtfeuer\MarketingAutomation\Event\EnrichPersonaEvent} instead.
+ * Subscribers registered via {@see addSubscriber()} continue to work via a
+ * compatibility bridge in {@see PersonaResolver} but should be migrated to
+ * regular PSR-14 event listeners.
+ */
 class Dispatcher implements SingletonInterface
 {
     /**
@@ -40,63 +37,48 @@ class Dispatcher implements SingletonInterface
      */
     protected array $listeners = [];
 
+    /**
+     * @deprecated since v13, will be removed in v14. Register a PSR-14 listener
+     * for {@see \Leuchtfeuer\MarketingAutomation\Event\EnrichPersonaEvent} instead.
+     */
     public function addSubscriber(string $className): void
     {
         $this->subscribers[] = $className;
     }
 
+    /**
+     * @deprecated since v13, will be removed in v14. Register a PSR-14 listener instead.
+     */
     public function addListener(string $className): void
     {
         $this->listeners[] = $className;
     }
 
-    public function dispatch(): void
+    /**
+     * @return string[]
+     * @internal Used by {@see PersonaResolver} to apply legacy subscribers.
+     */
+    public function getSubscribers(): array
     {
-        $extensionConfiguration = $this->getExtensionConfiguration();
-        $storage = GeneralUtility::makeInstance(Cookie::class, $extensionConfiguration['cookieName'], (int)$extensionConfiguration['cookieLifetime']);
-        $data = $storage->read();
-        $id = (int)($data[0] ?? 0);
-        $language = (int)($data[1] ?? -1);
-        $currentPersona = $newPersona = GeneralUtility::makeInstance(Persona::class, $id, $language);
-
-        foreach ($this->subscribers as $subscriber) {
-            if (!class_exists($subscriber)) {
-                throw new \RuntimeException(sprintf('Class %s does not exist.', $subscriber), 1587540937);
-            }
-
-            $object = GeneralUtility::makeInstance($subscriber);
-
-            if (!$object instanceof SubscriberInterface) {
-                throw new \RuntimeException(sprintf('Class %s needs to implement %s.', $subscriber, SubscriberInterface::class), 1530273364);
-            }
-
-            if ($object->needsUpdate($currentPersona, $newPersona)) {
-                $newPersona = $object->update($newPersona);
-            }
-        }
-
-        if ($currentPersona !== $newPersona) {
-            $storage->save([
-                (string)$newPersona->getId(),
-                (string)$newPersona->getLanguage(),
-            ]);
-        }
-
-        foreach ($this->listeners as $listener) {
-            $ref = null;
-            GeneralUtility::callUserFunction($listener, $newPersona, $ref);
-        }
+        return $this->subscribers;
     }
 
     /**
-     * @return array<mixed>
+     * @return string[]
+     * @internal Used by {@see PersonaResolver} to apply legacy callback listeners.
      */
-    protected function getExtensionConfiguration(): array
+    public function getListeners(): array
     {
-        try {
-            return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('marketing_automation');
-        } catch (\Exception) {
-            return [];
-        }
+        return $this->listeners;
+    }
+
+    /**
+     * @deprecated since v13, will be removed in v14. The persona resolution is
+     * now triggered automatically via the PSR-14 event flow in
+     * {@see \Leuchtfeuer\MarketingAutomation\EventListener\BeforePageIsResolvedEventListener}.
+     */
+    public function dispatch(PersonaRestriction $personaRestriction): void
+    {
+        GeneralUtility::makeInstance(PersonaResolver::class)->resolve();
     }
 }

@@ -13,16 +13,15 @@ declare(strict_types=1);
 
 namespace Leuchtfeuer\MarketingAutomation\Storage;
 
+use TYPO3\CMS\Core\Crypto\HashService;
+use TYPO3\CMS\Core\Exception\Crypto\InvalidHashStringException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Security\Cryptography\HashService;
-use TYPO3\CMS\Extbase\Security\Exception\InvalidArgumentForHashGenerationException;
-use TYPO3\CMS\Extbase\Security\Exception\InvalidHashException;
 
 class Cookie
 {
-    protected HashService $hashService;
+    protected ?HashService $hashService;
 
-    public function __construct(protected string $cookieName, protected int $cookieLifetime, HashService $hashService = null)
+    public function __construct(protected string $cookieName, protected int $cookieLifetime, ?HashService $hashService = null)
     {
         $this->hashService = $hashService ?: GeneralUtility::makeInstance(HashService::class);
     }
@@ -33,8 +32,8 @@ class Cookie
     public function read(): array
     {
         try {
-            $data = $this->hashService->validateAndStripHmac($_COOKIE[$this->cookieName] ?? '');
-        } catch (InvalidArgumentForHashGenerationException|InvalidHashException) {
+            $data = $this->hashService->validateAndStripHmac($_COOKIE[$this->cookieName] ?? '', $this->cookieName);
+        } catch (InvalidHashStringException) {
             $data = '';
         }
 
@@ -46,10 +45,11 @@ class Cookie
      */
     public function save(array $data): void
     {
+        $isSecure = ($GLOBALS['TYPO3_REQUEST'] ?? null)?->getUri()->getScheme() === 'https';
         setcookie(
             $this->cookieName,
-            $this->hashService->appendHmac(implode('.', $data) . '.'),
-            ['expires' => time() + $this->cookieLifetime, 'path' => '/', 'domain' => '', 'secure' => false, 'httponly' => true]
+            $this->hashService->appendHmac(implode('.', $data) . '.', $this->cookieName),
+            ['expires' => time() + $this->cookieLifetime, 'path' => '/', 'domain' => '', 'secure' => $isSecure, 'httponly' => true]
         );
     }
 }

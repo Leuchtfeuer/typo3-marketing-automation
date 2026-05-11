@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Leuchtfeuer\MarketingAutomation\Persona;
 
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EnforceableQueryRestrictionInterface;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
-use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
@@ -34,14 +32,16 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
 {
     public const PERSONA_ENABLE_FIELDS_KEY = 'tx_marketingautomation_persona';
 
-    /**
-     * @var Persona
-     */
-    private $persona;
+    protected ?Persona $persona = null;
 
     public function fetchCurrentPersona(Persona $persona): void
     {
         $this->persona = $persona;
+    }
+
+    public function getCurrentPersona(): ?Persona
+    {
+        return $this->persona;
     }
 
     #[\Override]
@@ -92,19 +92,7 @@ class PersonaRestriction implements SingletonInterface, QueryRestrictionInterfac
 
     private function isEnabled(): bool
     {
-        return $this->persona !== null && ($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface
-            && ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend();
+        return $this->persona !== null;
     }
 
-    /**
-     * Modify the cache hash to add persona dimension if applicable
-     *
-     * @param array<mixed> &$params Array of parameters: hashParameters, createLockHashBase
-     */
-    public function addPersonaToCacheIdentifier(&$params): void
-    {
-        if ($this->persona->isValid()) {
-            $params['hashParameters'][self::PERSONA_ENABLE_FIELDS_KEY] = (string)$this->persona->getId();
-        }
-    }
 }

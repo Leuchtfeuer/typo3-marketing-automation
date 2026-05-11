@@ -24,6 +24,10 @@ namespace Leuchtfeuer\MarketingAutomation\Dispatcher;
 
 use Leuchtfeuer\MarketingAutomation\Persona\Persona;
 
+/**
+ * @deprecated since v13, will be removed in v14. Implement a PSR-14 listener
+ * for {@see \Leuchtfeuer\MarketingAutomation\Event\EnrichPersonaEvent} instead.
+ */
 interface SubscriberInterface
 {
     public function needsUpdate(Persona $currentPersona, Persona $newPersona): bool;
